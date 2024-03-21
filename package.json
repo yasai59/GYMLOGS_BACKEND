@@ -1,9 +1,9 @@
 {
   "name": "gymlogs_backend",
-  "module": "index.ts",
+  "module": "index.js",
   "type": "module",
   "scripts": {
-    "start": "bun run index.ts",
+    "start": "bun run index.js",
     "test": "bun test"
   },
   "devDependencies": {
