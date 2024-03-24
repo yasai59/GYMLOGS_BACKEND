@@ -1,28 +1,14 @@
-import mysql from 'mysql2';
-import dbConfig from './dbConfig';
+const mysql = require("mysql2/promise");
+const dbConfig = require('./dbConfig');
 
-const{
-    createPool
-} = require('mysql2');
-
-const pool = createPool({
-    host: dbConfig.ip,
+const pool = mysql.createPool({
+    host: dbConfig.host, 
+    port: dbConfig.port,
+    database: dbConfig.database,
     user: dbConfig.user,
     password: dbConfig.password,
-    database: dbConfig.host,
     connectionLimit: 10
 });
-
-pool.query('SELECT * FROM type_exercise', (err, results, fields) => {
-    if(err){
-        return console.error(err.message);
-    }
-    return console.log(results);
-});
+// console.log(dbConfig.user);
 
 module.exports = pool;
-
-// const connection = mysql.createPool(dbConfig);
-
-
-// export default connection.promise();

@@ -1,6 +1,10 @@
-import express from 'express'
-
+const express = require('express')
 const routes = express.Router()
 
-const app = express()
-app.use(express.json())
+routes.use('/typeExercise', require('./typesexercise'));
+
+routes.use('/category', require('./category'));
+
+routes.use('/exercise', require('./exercise'));
+
+module.exports = routes;
