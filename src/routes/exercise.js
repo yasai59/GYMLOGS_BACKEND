@@ -14,41 +14,43 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.post("/post", (req, res, next) => {
-  const { name, description, category_id, type_exercise_id } = req.body;
-  conn
-    .query(
-      "INSERT INTO exercise (name, description, category_id, type_exercise_id) VALUES (?, ?, ?, ?)",
-      [name, description, category_id, type_exercise_id]
+router.post("/", async (req, res, next) => {
+  const { exercise_name, link_video, url_image, fk_category_1, fk_id_type} = req.body;
+  conn.query(
+      "INSERT INTO exercise (exercise_name, link_video, url_image, fk_category_1, fk_id_type) VALUES (?, ?, ?, ?, ?)",
+      [exercise_name, link_video, url_image, fk_category_1, fk_id_type]
     )
     .then(([result]) => {
       res.status(201).json({
         id: result.insertId,
-        name,
-        description,
-        category_id,
-        type_exercise_id,
+        exercise_name,
+        link_video,
+        url_image,
+        fk_category_1,
+        fk_id_type,
       });
     })
     .catch((err) => {
       res.status(500).json({ error: err });
+      console.log(err);
     });
 });
 
-router.put("/update:id", (req, res, next) => {
-  const { name, description, category_id, type_exercise_id } = req.body;
+router.put("/:id", (req, res, next) => {
+  const { exercise_name, link_video, url_image, fk_category_1, fk_id_type} = req.body;
   conn
     .query(
-      "UPDATE exercise SET name = ?, description = ?, category_id = ?, type_exercise_id = ? WHERE id = ?",
-      [name, description, category_id, type_exercise_id, req.params.id]
+      "UPDATE exercise SET exercise_name = ?, link_video = ?, url_image = ?, fk_category_1 = ?, fk_id_type = ? WHERE pk_id_exercise = ?",
+      [exercise_name, link_video, url_image, fk_category_1, fk_id_type, req.params.pk_id_exercise]
     )
     .then(() => {
       res.json({
-        id: req.params.id,
-        name,
-        description,
-        category_id,
-        type_exercise_id,
+        pk_id_exercise: req.params.pk_id_exercise,
+        exercise_name,
+        link_video,
+        url_image,
+        fk_category_1,
+        fk_id_type,
       });
     })
     .catch((err) => {
@@ -57,14 +59,14 @@ router.put("/update:id", (req, res, next) => {
 });
 
 router.delete("/delete:id", (req, res, next) => {
-    conn
-        .query("DELETE FROM exercise WHERE id = ?", [req.params.id])
-        .then(() => {
-        res.json({ deleted: req.params.id });
-        })
-        .catch((err) => {
-        res.status(500).json({ error: err });
-        });
+  conn
+    .query("DELETE FROM exercise WHERE id = ?", [req.params.id])
+    .then(() => {
+      res.json({ deleted: req.params.id });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err });
     });
+});
 
 module.exports = router;
