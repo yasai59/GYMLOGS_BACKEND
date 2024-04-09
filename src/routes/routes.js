@@ -9,6 +9,7 @@ routes.use('/exercise', require('./exercise'));
 
 routes.use('/users', require('./users'));
 
-routes.use('/rutine', require('./rutine'));
+routes.use('/routine', require('./routine'));
 
+routes.use('/sessions', require('./sessions'));
 module.exports = routes;
