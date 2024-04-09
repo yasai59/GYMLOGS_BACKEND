@@ -14,4 +14,18 @@ router.get("/", (req, res, next) => {
     });
 });
 
+router.get("/:id", (req, res, next) => {
+  conn
+    .query("SELECT name FROM type_exercise WHERE pk_id_type = ?", [
+      req.params.id,
+    ])
+    .then(([rows]) => {
+      console.log(rows);
+      res.json(rows);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err });
+    });
+});
+
 module.exports = router;

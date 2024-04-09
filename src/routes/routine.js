@@ -93,4 +93,20 @@ router.put("/day/:id", (req, res) => {
     });
 });
 
+//DELETE BY ID
+router.delete("/:id", (req, res) => {
+  conn
+    .query("DELETE FROM routines WHERE pk_id_routine = ?", [req.params.id])
+    .then(([result]) => {
+      if (result.affectedRows) {
+        res.json({ message: "Deleted" });
+      } else {
+        res.status(404).json({ error: "Not found" });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err });
+    });
+});
+
 module.exports = router;

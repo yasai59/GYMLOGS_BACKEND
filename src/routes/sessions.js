@@ -101,7 +101,7 @@ router.post("/:id", async (req, res) => {
 router.put("/name/:id", (req, res) => {
     const { nom_session } = req.body;
     conn
-        .query("UPDATE sessions SET nom_session = ? WHERE pk_id_session = ?", [
+        .query("UPDATE sessions SET nom_session = ? WHERE pk_id_sessio = ?", [
         nom_session,
         req.params.id,
         ])
@@ -115,6 +115,22 @@ router.put("/name/:id", (req, res) => {
         .catch((err) => {
         res.status(500).json({ error: err });
         });
+});
+
+//DELETE BY ID
+router.delete("/:id", (req, res) => {
+  conn
+    .query("DELETE FROM sessions WHERE pk_id_sessio = ?", [req.params.id])
+    .then(([result]) => {
+      if (result.affectedRows) {
+        res.json({ message: "Deleted" });
+      } else {
+        res.status(404).json({ error: "Not found" });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err });
+    });
 });
 
 module.exports = router;
