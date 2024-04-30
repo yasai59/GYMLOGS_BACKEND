@@ -2,31 +2,35 @@ const express = require("express");
 const router = express.Router();
 const conn = require("./../database/connection");
 
-router.get("/", (req, res, next) => {
-  conn
-    .query("SELECT * FROM category")
-    .then(([rows]) => {
+router.get("/", async (req, res, next) => {
+  try {
+    const [rows, fields] = await conn.query("SELECT * FROM category");
+    if (rows.length) {
       console.log(rows);
-      res.json(rows);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
-    });
+      return res.status(200).json(rows);
+    } else {
+      return res.status(404).json({ error: "Not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
 });
 
-router.get("/:id", (req, res, next) => {
-  conn
-    .query("SELECT name FROM category WHERE pk_id_category = ?", [req.params.id])
-    .then(([rows]) => {
-      if (rows.length) {
-        res.json(rows[0]);
-      } else {
-        res.status(404).json({ error: "Not found" });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
-    });
+router.get("/:id", async (req, res, next) => {
+  try {
+    const [rows, fields] = await conn.query(
+      "SELECT * FROM category WHERE pk_id_category = ?",
+      [req.params.id]
+    );
+    if (rows.length) {
+      return res.status(200).json(rows);
+    } else {
+      return res.status(404).json({ error: "Not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+  
 });
 
 module.exports = router;

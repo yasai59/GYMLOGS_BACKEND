@@ -2,30 +2,38 @@ const express = require("express");
 const router = express.Router();
 const conn = require("./../database/connection");
 
-router.get("/", (req, res, next) => {
-  conn
-    .query("SELECT * FROM type_exercise")
-    .then(([rows]) => {
+router.get("/", async (req, res, next) => {
+  try{
+    const [rows, fields] = await conn.query("SELECT * FROM type_exercise");
+    if(rows.length){
       console.log(rows);
-      res.json(rows);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
-    });
+      return res.status(200).json(rows);
+    }
+    else{
+      return res.status(404).json({error: "Not found"});
+    }
+  }
+  catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
 });
 
-router.get("/:id", (req, res, next) => {
-  conn
-    .query("SELECT name FROM type_exercise WHERE pk_id_type = ?", [
-      req.params.id,
-    ])
-    .then(([rows]) => {
+router.get("/:id", async(req, res, next) => {
+  try{
+    const [rows, fields] = await conn.query("SELECT * FROM type_exercise WHERE pk_id_type = ?", [req.params.id]);
+    if(rows.length){
       console.log(rows);
-      res.json(rows);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
-    });
+      return res.status(200).json(rows);
+    }
+    else{
+      return res.status(404).json({error: "Not found"});
+    }
+  }
+  catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
 });
 
 module.exports = router;
