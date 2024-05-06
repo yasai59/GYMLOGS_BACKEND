@@ -22,8 +22,9 @@ router.get("/:id", async (req, res) => {
       "SELECT * FROM sessions_exercise WHERE fk_id_sessio = ?",
       [req.params.id]
     );
+
     if (rows.length) {
-      return res.json(rows[0]);
+      return res.status(200).json(rows);
     } else {
       res.status(404).json({ error: "Not found" });
     }

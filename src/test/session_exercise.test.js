@@ -2,6 +2,12 @@ const { describe, expect, test, afterAll, beforeAll } = require("bun:test");
 const endPoint = `${process.env.SERVER_HOST_HTTP}:${process.env.SERVER_PORT}/api/`;
 let exerciseCreated = {};
 
+test("get all session - good", async () => {
+  const response = await fetch(endPoint + "sessions_exercise/");
+  const data = await response.json();
+  expect(response.status).toBe(200);
+});
+
 test("get session exercises by session id - good", async () => {
   const response = await fetch(endPoint + "sessions_exercise/" + 1);
   const data = await response.json();
