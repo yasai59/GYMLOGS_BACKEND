@@ -93,34 +93,64 @@ router.post("/", async (req, res, next) => {
 });
 
 //api request example http://localhost:3000/api/exercise/2
-router.put("/:id", (req, res, next) => {
-  const { exercise_name, link_video, url_image, fk_category_1, fk_id_type } =
-    req.body;
-  conn
-    .query(
-      "UPDATE exercise SET exercise_name = ?, link_video = ?, url_image = ?, fk_category_1 = ?, fk_id_type = ? WHERE pk_id_exercise = ?",
-      [
-        exercise_name,
-        link_video,
-        url_image,
-        fk_category_1,
-        fk_id_type,
-        req.params.id,
-      ]
-    )
-    .then(() => {
-      res.json({
-        pk_id_exercise: req.params.id,
-        exercise_name,
-        link_video,
-        url_image,
-        fk_category_1,
-        fk_id_type,
-      });
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
-    });
+router.put("/:id", async (req, res, next) => {
+  try {
+    const { exercise_name, link_video, url_image, fk_category_1, fk_id_type } =
+      req.body;
+
+    if (
+      !exercise_name ||
+      !link_video ||
+      !url_image ||
+      !fk_category_1 ||
+      !fk_id_type
+    ) {
+      return res.status(400).json({ error: "Bad request" });
+    } else {
+      if (
+        typeof exercise_name !== "string" ||
+        typeof link_video !== "string" ||
+        typeof url_image !== "string" ||
+        typeof fk_category_1 !== "number" ||
+        typeof fk_id_type !== "number"
+      ) {
+        return res.status(400).json({ error: "Bad request" });
+      } else {
+        const [rows, fields] = await conn.query(
+          "SELECT * FROM category WHERE pk_id_category = ?",
+          [fk_category_1]
+        );
+        if (!rows.length) {
+          return res.status(400).json({ error: "Bad request" });
+        } else {
+          const [rowsTypeExercise, fieldsTypeExercise] = await conn.query(
+            "SELECT * FROM type_exercise WHERE pk_id_type = ?",
+            [fk_id_type]
+          );
+          if (!rowsTypeExercise.length) {
+            return res.status(400).json({ error: "Bad request" });
+          } else {
+            const rowsExercise = await conn.query(
+              "UPDATE exercise SET exercise_name = ?, link_video = ?, url_image = ?, fk_category_1 = ?, fk_id_type = ? WHERE pk_id_exercise = ?",
+              [exercise_name, link_video, url_image, fk_category_1, fk_id_type, req.params.id]
+            );
+            // console.log(rows.insertId);
+            res.status(201).json({
+              id: rowsExercise.insertId,
+              exercise_name,
+              link_video,
+              url_image,
+              fk_category_1,
+              fk_id_type,
+            });
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
 });
 
 router.delete("/:id", async (req, res, next) => {

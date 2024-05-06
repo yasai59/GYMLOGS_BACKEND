@@ -66,7 +66,7 @@ describe("user self configuration", () => {
     expect(response.status).toBe(200);
   });
 
-  test("login user - wrong (don't exist)", async () => {
+  test("login user - bad (don't exist)", async () => {
     const response = await fetch(endPoint + "users/emailandpassword", {
       method: "POST",
       headers: {
@@ -80,7 +80,7 @@ describe("user self configuration", () => {
     expect(response.status).toBe(404);
   });
 
-  test("login user - wrong (no user)", async () => {
+  test("login user - bad (no user)", async () => {
     const response = await fetch(endPoint + "users/emailandpassword", {
       method: "POST",
       headers: {
@@ -94,7 +94,7 @@ describe("user self configuration", () => {
     expect(response.status).toBe(404);
   });
 
-  test("update email by id - wrong", async () => {
+  test("update email by id - bad", async () => {
     const response = await fetch(
       endPoint + "users/email/" + JSON.stringify(userData.id),
       {
