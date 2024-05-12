@@ -18,7 +18,7 @@ test("post routine - good", async () => {
       routine_name: "test",
       type_routine: "libre",
       day_routine: null,
-      num_routine: 1,
+      num_routine: null,
     }),
   });
   const data = await response.json();
@@ -41,7 +41,7 @@ test("update routine name - good", async () => {
   );
   const data = await response.json();
   expect(response.status).toBe(200);
-});
+}); 
 
 test("update routine days - good", async () => {
   const response = await fetch(

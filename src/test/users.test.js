@@ -28,6 +28,7 @@ test("get users by id", async () => {
 });
 
 async function createUser() {
+
   const response = await fetch(endPoint + "users", {
     method: "POST",
     headers: {
