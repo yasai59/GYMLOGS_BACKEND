@@ -6,7 +6,7 @@ const conn = require("../database/connection");
 router.get("/:id", async (req, res, next) => {
   try {
     const rows = await conn.query(
-      "SELECT * FROM routines WHERE pk_id_routine = ?",
+      "SELECT * FROM sessions WHERE fk_id_routine = ?",
       [req.params.id]
     );
     console.log(rows);

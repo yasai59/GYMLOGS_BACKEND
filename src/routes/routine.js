@@ -16,6 +16,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// SHOW ROUTINES BY USER
 router.get("/:id", async (req, res, next) => {
   try {
     const [rows, fields] = await conn.query(
@@ -33,16 +34,31 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+// SHOW ROUTINE BY ID
+router.get("/id/:id", async (req, res, next) => {
+  try {
+    const [rows, fields] = await conn.query(
+      "SELECT * FROM routines WHERE pk_id_routine = ?",
+      [req.params.id]
+    );
+    if (rows.length) {
+      return res.status(200).json(rows);
+    } else {
+      return res.status(404).json({ error: "Not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+});
+
 // POST ROUTINE
 router.post("/:id", async (req, res) => {
   const { routine_name, type_routine, day_routine, num_routine } = req.body;
   const fk_id_username = parseInt(req.params.id);
 
   try {
-    console.log("ola");
     console.log("day_routine type: " + typeof day_routine);
     if (!routine_name || !type_routine || !fk_id_username) {
-      console.log("ola1");
       return res.status(401).json({ error: "Bad request: Variable not null" });
     } else if (
       typeof routine_name !== "string" ||
