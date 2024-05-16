@@ -3,7 +3,7 @@ const router = express.Router();
 const conn = require("../database/connection");
 
 // SHOW SESSIONS BY ROUTINE
-router.get("/:id", async (req, res, next) => {
+router.get("/routine/:id", async (req, res, next) => {
   try {
     const rows = await conn.query(
       "SELECT * FROM sessions WHERE fk_id_routine = ?",
@@ -15,6 +15,22 @@ router.get("/:id", async (req, res, next) => {
     } else {
       res.status(404).json({ error: "Not found" });
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
+});
+
+router.get("/:id", async (req, res, next) => {
+  try {
+    const [rows, fields] = await conn.query(
+      "SELECT * FROM sessions WHERE pk_id_sessio = ?",
+      [req.params.id]
+    );
+    if (rows.length) {
+      return res.status(200).json(rows);
+    }
+    return res.status(404).json({ error: "Not found" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
