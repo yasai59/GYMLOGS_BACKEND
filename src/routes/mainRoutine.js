@@ -1,9 +1,9 @@
 const express = require("express");
-const router = express.Router();
+const mainRoutineRouter = express.mainRoutineRouter();
 const conn = require("../database/connection");
 
 // SHOW mainRoutine
-router.get("/", async (req, res, next) => {
+mainRoutineRouter.get("/", async (req, res, next) => {
   try {
     const [rows, fields] = await conn.query("SELECT * FROM mainRoutine");
     if (rows.length) {
@@ -17,7 +17,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // SHOW mainRoutine BY USER ID
-router.get("/:id", async (req, res, next) => {
+mainRoutineRouter.get("/:id", async (req, res, next) => {
   try {
     const [rows, fields] = await conn.query(
       "SELECT * FROM mainRoutine WHERE fk_id_user = ?",
@@ -34,7 +34,7 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // SHOW mainRoutine BY ROUTINE ID AND USER ID
-router.get("/:id/:id_user", async (req, res, next) => {
+mainRoutineRouter.get("/:id/:id_user", async (req, res, next) => {
   try {
     const [rows, fields] = await conn.query(
       "SELECT * FROM mainRoutine WHERE fk_id_user = ? AND fk_id_routine = ?",
@@ -51,7 +51,7 @@ router.get("/:id/:id_user", async (req, res, next) => {
 });
 
 // POST mainRoutine
-router.post("/:id", async (req, res) => {
+mainRoutineRouter.post("/:id", async (req, res) => {
   const { fk_id_user } = req.body;
 
   try {
@@ -72,7 +72,7 @@ router.post("/:id", async (req, res) => {
 });
 
 // DELETE mainRoutine BY USER ID
-router.delete("/:id", async (req, res) => {
+mainRoutineRouter.delete("/:id", async (req, res) => {
   try {
     const [rows, fields] = await conn.query(
       "DELETE FROM mainRoutine WHERE fk_id_user = ?",
@@ -84,4 +84,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = mainRoutineRouter;
