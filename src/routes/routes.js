@@ -7,7 +7,7 @@ routes.use('/category', require('./category'));
 
 routes.use('/exercise', require('./exercise'));
 
-routes.use('/useres', require('./users'));
+routes.use('/users', require('./users'));
 
 routes.use('/routine', require('./routine'));
 
