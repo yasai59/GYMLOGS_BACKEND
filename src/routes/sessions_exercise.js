@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const conn = require("../database/connection");
 
-//GET ALL SESSIONS EXERCISE
 //ADMIN
+//GET ALL SESSIONS EXERCISE
 router.get("/", async (req, res) => {
   try {
     const [rows, fields] = await conn.query("SELECT * FROM sessions_exercise");
@@ -14,20 +14,15 @@ router.get("/", async (req, res) => {
   }
 });
 
-//GET BY SESSION ID
 //CLIENTS
+//GET BY SESSION ID
 router.get("/:id", async (req, res) => {
   try {
-    const rows = await conn.query(
+    const [rows, fields] = await conn.query(
       "SELECT * FROM sessions_exercise WHERE fk_id_sessio = ?",
       [req.params.id]
     );
-
-    if (rows.length) {
-      return res.status(200).json(rows);
-    } else {
-      res.status(404).json({ error: "Not found" });
-    }
+    return res.json(rows);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
@@ -61,9 +56,9 @@ router.post("/", async (req, res) => {
         if (rows2.affectedRows) {
           // Changed 'rows2.length' to 'rows2.affectedRows'
           return res.status(201).json({
-            id: rows2.insertId,
-            fk_id_sessio,
-            fk_id_exercise,
+            pk_id_sessio_ex: rows2.insertId,
+            fk_id_sessio: JSON.parse(fk_id_sessio),
+            fk_id_exercise: JSON.parse(fk_id_exercise),
           });
         } else {
           return res.status(404).json({ error: "Not found" });
@@ -77,6 +72,7 @@ router.post("/", async (req, res) => {
 });
 
 //DELETE SESSION EXERCISE
+// DELETE SESSION EXERCISE BY ID
 router.delete("/:id", async (req, res) => {
   try {
     const [rows, fields] = await conn.query(
@@ -93,5 +89,24 @@ router.delete("/:id", async (req, res) => {
     return res.status(500).json({ error });
   }
 });
+
+// DELETE SESSION EXERCISE BY SESSION AND EXERCISE ID
+router.delete("/:session_id/:exercise_id", async (req, res) => {
+  try {
+    const [rows, fields] = await conn.query(
+      "DELETE FROM sessions_exercise WHERE fk_id_sessio = ? AND fk_id_exercise = ?",
+      [req.params.session_id, req.params.exercise_id]
+    );
+    if (rows.affectedRows) {
+      return res.json({ message: "Deleted" });
+    } else {
+      return res.status(404).json({ error: "Not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
+});
+
 
 module.exports = router;

@@ -100,7 +100,7 @@ router.post("/:id", async (req, res) => {
           [nom_session, week_day, fk_category_1, fk_category_2, fk_id_routine]
         );
         res.status(201).json({
-          id: result.insertId,
+          pk_id_sessio: result.insertId,
           nom_session,
           week_day,
           fk_category_1,

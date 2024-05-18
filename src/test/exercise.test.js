@@ -23,7 +23,7 @@ test("create exercise - good", async () => {
     body: JSON.stringify({
       exercise_name: "test",
       link_video: "test",
-      url_image: "test",
+      description: "test",
       fk_category_1: 1,
       fk_id_type: 1,
     }),
@@ -42,7 +42,7 @@ test("create exercise - bad (wrong type of content)", async () => {
     body: JSON.stringify({
       exercise_name: "test",
       link_video: "test",
-      url_image: "test",
+      description: "test",
       fk_category_1: 1,
       fk_id_type: "test",
     }),
@@ -60,7 +60,7 @@ test("create exercise - bad (missing field)", async () => {
     body: JSON.stringify({
       exercise_name: "test",
       link_video: "test",
-      url_image: "test",
+      description: "test",
       fk_category_1: 1,
     }),
   });
@@ -79,7 +79,7 @@ test("update exercise - good", async () => {
       body: JSON.stringify({
         exercise_name: "test",
         link_video: "test",
-        url_image: "test",
+        description: "test",
         fk_category_1: 1,
         fk_id_type: 1,
       }),

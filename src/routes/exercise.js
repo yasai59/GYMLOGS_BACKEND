@@ -35,6 +35,23 @@ router.get("/type/:id", async (req, res, next) => {
   }
 });
 
+router.get("/id/:id", async (req, res, nex) => {
+  try {
+    const [rows, fields] = await conn.query(
+      "SELECT * FROM exercise WHERE pk_id_exercise = ?",
+      [req.params.id]
+    );
+    if (rows.length) {
+      console.log(rows);
+      return res.status(200).json(rows);
+    } else {
+      return res.status(404).json({ error: "Not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+});
+
 router.post("/", async (req, res, next) => {
   const { exercise_name, link_video, url_image, fk_category_1, fk_id_type } =
     req.body;
@@ -132,7 +149,14 @@ router.put("/:id", async (req, res, next) => {
           } else {
             const rowsExercise = await conn.query(
               "UPDATE exercise SET exercise_name = ?, link_video = ?, url_image = ?, fk_category_1 = ?, fk_id_type = ? WHERE pk_id_exercise = ?",
-              [exercise_name, link_video, url_image, fk_category_1, fk_id_type, req.params.id]
+              [
+                exercise_name,
+                link_video,
+                url_image,
+                fk_category_1,
+                fk_id_type,
+                req.params.id,
+              ]
             );
             // console.log(rows.insertId);
             res.status(201).json({

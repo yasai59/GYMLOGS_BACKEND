@@ -11,6 +11,8 @@ routes.use('/users', require('./users'));
 
 routes.use('/routine', require('./routine'));
 
+routes.use('/mainRoutine', require('./mainRoutine'));
+
 routes.use('/sessions', require('./sessions'));
 
 routes.use('/sessions_exercise', require('./sessions_exercise'));

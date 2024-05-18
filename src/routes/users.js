@@ -15,14 +15,13 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const rows = await conn.query("SELECT * FROM users WHERE pk_id_user = ?", [
-      req.params.id,
-    ]);
+    const [rows, field] = await conn.query(
+      "SELECT * FROM users WHERE pk_id_user = ?",
+      [req.params.id]
+    );
 
-    // console.log(rows[0]);
-    if (rows[0].length) {
-      // console.log(rows[0]);
-      return res.json(rows[0]);
+    if (rows.length) {
+      return res.json(rows);
     } else {
       res.status(404).json({ error: "Not found" });
     }
@@ -189,9 +188,6 @@ router.put("/password/:id/:passwd", async (req, res) => {
     const { pssd } = req.body;
     const pastPssd = req.params.passwd;
     const hash = await Bun.password.hash(pssd, { algorithm: "bcrypt" });
-    const hashPastPassword = await Bun.password.hash(pastPssd, {
-      algorithm: "bcrypt",
-    });
 
     const [rowsInsert, fieldsInsert] = await conn.query(
       "SELECT pssd FROM users WHERE pk_id_user = ?",
@@ -203,19 +199,20 @@ router.put("/password/:id/:passwd", async (req, res) => {
     } else {
       const isMatch = await Bun.password.verify(pastPssd, rowsInsert[0].pssd);
 
-      // console.log("hash:" + hash);
-      // console.log("rowInsert:" + rowsInsert[0].pssd);
-      // console.log("isMatch:" + isMatch);
-      // console.log("pastPssd:" + pastPssd);
-      // console.log("hashPastPassword:" + hashPastPassword);
+      console.log("hash:" + hash);
+      console.log("rowInsert:" + rowsInsert[0].pssd);
+      console.log("isMatch:" + isMatch);
+      console.log("pastPssd:" + pastPssd);
 
-      if (isMatch) {
+      if (isMatch === true) {
+        // console.log("ola");
         const [rowsInsert, fieldsInsert] = await conn.query(
           "UPDATE users SET pssd = ? WHERE pk_id_user = ?",
           [hash, req.params.id]
         );
         return res.status(200).json({ pk_id_user: req.params.id });
       } else {
+        // console.log("error");
         return res.status(404).json({ error: "Not found" });
       }
     }
