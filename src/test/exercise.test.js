@@ -70,7 +70,7 @@ test("create exercise - bad (missing field)", async () => {
 
 test("update exercise - good", async () => {
   const response = await fetch(
-    endPoint + "exercise/" + JSON.stringify(exerciseCreated.id),
+    endPoint + "exercise/" + JSON.stringify(exerciseCreated.pk_id_exercise),
     {
       method: "PUT",
       headers: {
@@ -90,9 +90,8 @@ test("update exercise - good", async () => {
 });
 
 test("delete exercise - good", async () => {
-  console.log("exerciseCreated.id", JSON.stringify(exerciseCreated.id));
   const response = await fetch(
-    endPoint + "exercise/" + JSON.stringify(exerciseCreated.id),
+    endPoint + "exercise/" + JSON.stringify(exerciseCreated.pk_id_exercise),
     {
       method: "DELETE",
     }

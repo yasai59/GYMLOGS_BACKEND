@@ -9,19 +9,10 @@ router.get("/:id", async (req, res) => {
       "SELECT * FROM sessions WHERE pk_id_sessio = ?",
       [req.params.id]
     );
-    if (!rows.length) {
-      return res.status(404).json({ error: "Session not found" });
+    if (rows.length) {
+      return res.status(200).json(rows);
     } else {
-      const [rows2, fields2] = await conn.query(
-        "SELECT * FROM calendar WHERE fk_id_session = ?",
-        [req.params.id]
-      );
-      return res.status(200).json({
-        pk_id_calendar: rows2[0].pk_id_calendar,
-        datas: rows2[0].datas,
-        duration: rows2[0].duration,
-        fk_id_session: rows2[0].fk_id_session,
-      });
+      return res.status(404).json({ error: "Session not found" });
     }
   } catch (error) {
     console.log(error);
@@ -31,28 +22,30 @@ router.get("/:id", async (req, res) => {
 
 //POST SESSION EXERCISE
 router.post("/", async (req, res) => {
-  const { datas, duration, fk_id_session } = req.body;
+  const { serie, weight, repetitions, duration, day, fk_id_session_ex } =
+    req.body;
 
   try {
     const rows = await conn.query(
-      "SELECT * FROM sessions WHERE pk_id_sessio = ?",
-      [fk_id_session]
+      "SELECT * FROM sessions_exercise WHERE pk_id_sessio_ex = ?",
+      [fk_id_session_ex]
     );
     if (!rows.length) {
       return res.status(404).json({ error: "Session not found" });
     } else {
       const [rows2, fields2] = await conn.query(
-        "INSERT INTO calendar (datas, duration, fk_id_session) VALUES (?, ?, ?)",
-        [datas, duration, fk_id_session]
+        "INSERT INTO calendar (serie, weight, repetitions, duration, day, fk_id_session_ex) VALUES (?, ?, ?, ?, ?, ?)",
+        [serie, weight, repetitions, duration, day, fk_id_session_ex]
       );
-      if (rows2.affectedRows) {
-        res.status(201).json({
-          id: rows2.insertId,
-          datas,
-          duration,
-          fk_id_session,
+        return res.status(201).json({
+          pk_id_calendar: rows2.insertId,
+          serie: serie,
+          weight: weight,
+          repetitions: repetitions,
+          duration: duration,
+          day: day,
+          fk_id_session_ex: fk_id_session_ex,
         });
-      }
     }
   } catch (error) {
     console.log(error);

@@ -53,14 +53,14 @@ router.get("/id/:id", async (req, res, nex) => {
 });
 
 router.post("/", async (req, res, next) => {
-  const { exercise_name, link_video, url_image, fk_category_1, fk_id_type } =
+  const { exercise_name, link_video, description, fk_category_1, fk_id_type } =
     req.body;
 
   try {
     if (
       !exercise_name ||
       !link_video ||
-      !url_image ||
+      !description ||
       !fk_category_1 ||
       !fk_id_type
     ) {
@@ -68,7 +68,7 @@ router.post("/", async (req, res, next) => {
     } else if (
       typeof exercise_name !== "string" ||
       typeof link_video !== "string" ||
-      typeof url_image !== "string" ||
+      typeof description !== "string" ||
       typeof fk_category_1 !== "number" ||
       typeof fk_id_type !== "number"
     ) {
@@ -89,15 +89,14 @@ router.post("/", async (req, res, next) => {
           return res.status(400).json({ error: "Bad request" });
         } else {
           const [rows, fields] = await conn.query(
-            "INSERT INTO exercise (exercise_name, link_video, url_image, fk_category_1, fk_id_type) VALUES (?, ?, ?, ?, ?)",
-            [exercise_name, link_video, url_image, fk_category_1, fk_id_type]
+            "INSERT INTO exercise (exercise_name, link_video, description, fk_category_1, fk_id_type) VALUES (?, ?, ?, ?, ?)",
+            [exercise_name, link_video, description, fk_category_1, fk_id_type]
           );
-          // console.log(rows.insertId);
+
           res.status(201).json({
-            id: rows.insertId,
+            pk_id_exercise: rows.insertId,
             exercise_name,
-            link_video,
-            url_image,
+            description,
             fk_category_1,
             fk_id_type,
           });
@@ -105,74 +104,71 @@ router.post("/", async (req, res, next) => {
       }
     }
   } catch (error) {
-    return res.status(500).json({ error });
+    return res.status(500).json(console.log(error), { error });
   }
 });
 
 //api request example http://localhost:3000/api/exercise/2
 router.put("/:id", async (req, res, next) => {
   try {
-    const { exercise_name, link_video, url_image, fk_category_1, fk_id_type } =
-      req.body;
+    const {
+      exercise_name,
+      link_video,
+      description,
+      fk_category_1,
+      fk_id_type,
+    } = req.body;
 
     if (
       !exercise_name ||
       !link_video ||
-      !url_image ||
+      !description ||
       !fk_category_1 ||
       !fk_id_type
     ) {
       return res.status(400).json({ error: "Bad request" });
+    } else if (
+      typeof exercise_name !== "string" ||
+      typeof link_video !== "string" ||
+      typeof description !== "string" ||
+      typeof fk_category_1 !== "number" ||
+      typeof fk_id_type !== "number"
+    ) {
+      return res.status(400).json({ error: "Bad request" });
     } else {
-      if (
-        typeof exercise_name !== "string" ||
-        typeof link_video !== "string" ||
-        typeof url_image !== "string" ||
-        typeof fk_category_1 !== "number" ||
-        typeof fk_id_type !== "number"
-      ) {
-        return res.status(400).json({ error: "Bad request" });
+      const [rows, fields] = await conn.query(
+        "SELECT * FROM exercise WHERE pk_id_exercise = ?",
+        [req.params.id]
+      );
+      if (!rows.length) {
+        return res
+          .status(404)
+          .json(console.log(req.params.id), { error: "Not found" });
       } else {
-        const [rows, fields] = await conn.query(
-          "SELECT * FROM category WHERE pk_id_category = ?",
-          [fk_category_1]
+        const [rows2, fields2] = await conn.query(
+          "UPDATE exercise SET exercise_name = ?, link_video = ?, description = ?, fk_category_1 = ?, fk_id_type = ? WHERE pk_id_exercise = ?",
+          [
+            exercise_name,
+            link_video,
+            description,
+            fk_category_1,
+            fk_id_type,
+            req.params.id,
+          ]
         );
-        if (!rows.length) {
-          return res.status(400).json({ error: "Bad request" });
-        } else {
-          const [rowsTypeExercise, fieldsTypeExercise] = await conn.query(
-            "SELECT * FROM type_exercise WHERE pk_id_type = ?",
-            [fk_id_type]
-          );
-          if (!rowsTypeExercise.length) {
-            return res.status(400).json({ error: "Bad request" });
-          } else {
-            const rowsExercise = await conn.query(
-              "UPDATE exercise SET exercise_name = ?, link_video = ?, url_image = ?, fk_category_1 = ?, fk_id_type = ? WHERE pk_id_exercise = ?",
-              [
-                exercise_name,
-                link_video,
-                url_image,
-                fk_category_1,
-                fk_id_type,
-                req.params.id,
-              ]
-            );
-            // console.log(rows.insertId);
-            res.status(201).json({
-              id: rowsExercise.insertId,
-              exercise_name,
-              link_video,
-              url_image,
-              fk_category_1,
-              fk_id_type,
-            });
-          }
+        if (rows2.affectedRows) {
+          return res.status(201).json({
+            pk_id_exercise: req.params.id,
+            exercise_name,
+            link_video,
+            description,
+            fk_category_1,
+            fk_id_type,
+          });
         }
       }
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error });
   }
 });

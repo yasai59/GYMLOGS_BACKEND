@@ -46,24 +46,21 @@ router.get("/category/:id", async (req, res, next) => {
     );
     console.log(rows);
     if (rows.length) {
-      const fk_category_1 = rows[0].fk_category_1;
-      const fk_category_2 = rows[0].fk_category_2;
-
-      console.log("Category1: " + fk_category_1);
-      console.log("Category2: " + fk_category_2);
+      const fk_category_1 = rows.fk_category_1;
+      const fk_category_2 = rows.fk_category_2;
 
       const [rows1, fields1] = await conn.query(
         "SELECT name FROM category WHERE pk_id_category = ?",
         [fk_category_1]
       );
-      const category1 = rows1[0].name;
+      const category1 = rows1.name;
 
       if (fk_category_2) {
         const [rows2, fields2] = await conn.query(
           "SELECT name FROM category WHERE pk_id_category = ?",
           [fk_category_2]
         );
-        const category2 = rows2[0].name;
+        const category2 = rows2.name;
         res.json({ category1, category2 });
       } else {
         res.json({ category1 });
@@ -72,7 +69,6 @@ router.get("/category/:id", async (req, res, next) => {
       res.status(404).json({ error: "Not found" });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error });
   }
 });
@@ -140,7 +136,6 @@ router.put("/name/:id", async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error });
   }
 });

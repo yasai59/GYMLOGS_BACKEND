@@ -32,7 +32,7 @@ test("post session exercise - good", async () => {
 
 test("delete session exercise - good", async () => {
   const response = await fetch(
-    endPoint + "sessions_exercise/" + JSON.stringify(exerciseCreated.id),
+    endPoint + "sessions_exercise/" + JSON.stringify(exerciseCreated.pk_id_sessio_ex),
     {
       method: "DELETE",
     }

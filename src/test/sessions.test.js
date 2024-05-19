@@ -35,7 +35,7 @@ test("post session - good", async () => {
 
 test("update session name - good", async () => {
   const response = await fetch(
-    endPoint + "sessions/name/" + JSON.stringify(exerciseCreated.id),
+    endPoint + "sessions/name/" + JSON.stringify(exerciseCreated.pk_id_sessio),
     {
       method: "PUT",
       headers: {
@@ -52,7 +52,7 @@ test("update session name - good", async () => {
 
 test("delete session - good", async () => {
   const response = await fetch(
-    endPoint + "sessions/" + JSON.stringify(exerciseCreated.id),
+    endPoint + "sessions/" + JSON.stringify(exerciseCreated.pk_id_sessio),
     {
       method: "DELETE",
     }
