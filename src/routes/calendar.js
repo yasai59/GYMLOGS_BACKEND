@@ -31,6 +31,24 @@ router.get("/exercise/:id/:day", async (req, res) => {
   }
 });
 
+//GET BY SESSION EXERCISE
+router.get("/exercise/:id", async (req, res) => {
+  try {
+    const rows = await conn.query(
+      "SELECT * FROM calendar WHERE fk_id_session_ex = ?",
+      [req.params.id]
+    );
+    if (rows.length) {
+      return res.status(200).json(rows);
+    } else {
+      return res.status(404).json({ error: "Calendar not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
+});
+
 //GET BY SESSION ID
 router.get("/:id", async (req, res) => {
   try {
