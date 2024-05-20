@@ -39,7 +39,17 @@ router.get("/exercise/:id", async (req, res) => {
       [req.params.id]
     );
     if (rows.length) {
-      return res.status(200).json(rows);
+      return res.status(200).json(
+        {
+          pk_id_calendar: rows.pk_id_calendar,
+          serie: rows.serie,
+          weight: rows.weight,
+          repetitions: rows.repetitions,
+          duration: rows.duration,
+          day: rows.day,
+          fk_id_session_ex: rows.fk_id_session_ex,
+        }
+      );
     } else {
       return res.status(404).json({ error: "Calendar not found" });
     }
