@@ -29,6 +29,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//GET SESSION EXERCISE BY SESSION EXERCISE ID
+router.get("/session/:id", async (req, res) => {
+  try {
+    const [rows, fields] = await conn.query(
+      "SELECT * FROM sessions_exercise WHERE pk_id_sessio_ex = ?",
+      [req.params.id]
+    );
+    return res.json(rows);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
+});
+
 //GET BY EXERCISE WITH SESSIONEXERCISE ID
 router.get("/exercise/:id", async (req, res) => {
   try {
@@ -121,6 +135,5 @@ router.delete("/:session_id/:exercise_id", async (req, res) => {
     return res.status(500).json({ error });
   }
 });
-
 
 module.exports = router;
