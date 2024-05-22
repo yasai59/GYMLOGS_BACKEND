@@ -15,25 +15,25 @@ router.get("/", async (req, res) => {
 });
 
 //CLIENTS
-//GET SESSION EXERCISES BY ID
-// router.get("/id/:id", async (req, res) => {
-//   try {
-//     const [rows, fields] = await conn.query(
-//       "SELECT * FROM sessions_exercise WHERE pk_id_sessio_ex = ?",
-//       [req.params.id]
-//     );
-//     return res.json(rows);
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ error });
-//   }
-// });
-
-//GET SESSION EXERCISES BY SESSION ID
+//GET BY SESSION ID
 router.get("/:id", async (req, res) => {
   try {
     const [rows, fields] = await conn.query(
       "SELECT * FROM sessions_exercise WHERE fk_id_sessio = ?",
+      [req.params.id]
+    );
+    return res.json(rows);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
+});
+
+//GET BY EXERCISE WITH SESSIONEXERCISE ID
+router.get("/exercise/:id", async (req, res) => {
+  try {
+    const [rows, fields] = await conn.query(
+      "SELECT * FROM sessions_exercise WHERE fk_id_exercise = ?",
       [req.params.id]
     );
     return res.json(rows);
