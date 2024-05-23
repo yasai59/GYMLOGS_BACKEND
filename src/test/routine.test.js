@@ -1,5 +1,5 @@
-const { describe, expect, test, afterAll, beforeAll } = require("bun:test");
-const endPoint = `${process.env.SERVER_HOST_HTTP}:${process.env.SERVER_PORT}/api/`;
+import { endPoint } from "./info.js";
+
 let exerciseCreated = {};
 
 test("get routines by user - good", async () => {
@@ -41,7 +41,7 @@ test("update routine name - good", async () => {
   );
   const data = await response.json();
   expect(response.status).toBe(200);
-}); 
+});
 
 test("update routine days - good", async () => {
   const response = await fetch(
@@ -53,7 +53,7 @@ test("update routine days - good", async () => {
       },
       body: JSON.stringify({
         day_routine: "L, M, X",
-        num_routine: 0
+        num_routine: 0,
       }),
     }
   );

@@ -1,5 +1,4 @@
-const { describe, expect, test, afterAll, beforeAll } = require("bun:test");
-const endPoint = `${process.env.SERVER_HOST_HTTP}:${process.env.SERVER_PORT}/api/`;
+import { endPoint } from "./info.js";
 
 let testUserId = 1;
 
@@ -28,7 +27,6 @@ test("get users by id", async () => {
 });
 
 async function createUser() {
-
   const response = await fetch(endPoint + "users", {
     method: "POST",
     headers: {

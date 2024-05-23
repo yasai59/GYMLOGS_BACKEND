@@ -1,5 +1,5 @@
-const { describe, expect, test, afterAll, beforeAll } = require("bun:test");
-const endPoint = `${process.env.SERVER_HOST_HTTP}:${process.env.SERVER_PORT}/api/`;
+import { endPoint } from "./info.js";
+
 let exerciseCreated = {};
 
 test("get all session - good", async () => {
@@ -32,7 +32,9 @@ test("post session exercise - good", async () => {
 
 test("delete session exercise - good", async () => {
   const response = await fetch(
-    endPoint + "sessions_exercise/" + JSON.stringify(exerciseCreated.pk_id_sessio_ex),
+    endPoint +
+      "sessions_exercise/" +
+      JSON.stringify(exerciseCreated.pk_id_sessio_ex),
     {
       method: "DELETE",
     }
