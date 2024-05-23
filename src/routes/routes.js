@@ -1,22 +1,33 @@
-const express = require('express')
-const routes = express.Router()
+import { Router } from "express";
 
-routes.use('/typeExercise', require('./typesexercise'));
+import typesExercise from "./typesexercise";
+import category from "./category";
+import exercise from "./exercise";
+import users from "./users";
+import routine from "./routine";
+import mainRoutine from "./mainRoutine";
+import sessions from "./sessions";
+import sessions_exercise from "./sessions_exercise";
+import calendar from "./calendar";
 
-routes.use('/category', require('./category'));
+const routes = Router();
 
-routes.use('/exercise', require('./exercise'));
+routes.use("/typeExercise", typesExercise);
 
-routes.use('/users', require('./users'));
+routes.use("/category", category);
 
-routes.use('/routine', require('./routine'));
+routes.use("/exercise", exercise);
 
-routes.use('/mainRoutine', require('./mainRoutine'));
+routes.use("/users", users);
 
-routes.use('/sessions', require('./sessions'));
+routes.use("/routine", routine);
 
-routes.use('/sessions_exercise', require('./sessions_exercise'));
+routes.use("/mainRoutine", mainRoutine);
 
-routes.use('/calendar', require('./calendar'));
+routes.use("/sessions", sessions);
 
-module.exports = routes;
+routes.use("/sessions_exercise", sessions_exercise);
+
+routes.use("/calendar", calendar);
+
+export default routes;

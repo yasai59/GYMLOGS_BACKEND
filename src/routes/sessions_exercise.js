@@ -1,6 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const conn = require("../database/connection");
+import { Router } from "express";
+import conn from "../database/connection.js";
+
+const router = Router();
 
 //ADMIN
 //GET ALL SESSIONS EXERCISE
@@ -136,4 +137,4 @@ router.delete("/:session_id/:exercise_id", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

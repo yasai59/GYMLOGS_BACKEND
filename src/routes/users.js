@@ -1,6 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const conn = require("./../database/connection");
+import { Router } from "express";
+import conn from "../database/connection.js";
+
+const router = Router();
 
 router.get("/", async (req, res) => {
   try {
@@ -222,4 +223,4 @@ router.put("/password/:id/:passwd", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
